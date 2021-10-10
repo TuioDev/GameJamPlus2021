@@ -25,4 +25,9 @@ public class TilemapColorBehaviour : MonoBehaviour
             this.gameObject.GetComponent<TilemapCollider2D>().enabled = true;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
 }

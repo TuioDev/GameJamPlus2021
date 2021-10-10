@@ -13,9 +13,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private SpriteRenderer currentSprite;
     [SerializeField] private float redJumpMultiplier = 1.5f;
     [SerializeField] private float yellowVelMultiplier = 1.5f;
+    [SerializeField] private GameObject gameGrid;
 
     private GameColors playerColor;
-
+    private GameObject respawnPoint;
     private bool grounded = false;
     private bool jump = false;
 
@@ -34,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     {
         grounded = Physics2D.Linecast(transform.position, groundCheckLeft.position, 1 << LayerMask.NameToLayer("Level"));
         CanJump();
-
+        CanUnlive();
     }
 
     private void FixedUpdate()
@@ -84,24 +85,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void CanUnlive()
     {
-        if(playerRB.velocity.x < 4.9f)
+        if(playerRB.velocity.x < 4.95f)
         {
-            //Game over, respawn on spawn point
-            Debug.Log("Morreu!");
-        }
-        else if((collision.collider.gameObject.layer == 9 && playerColor == GameColors.Yellow) 
-            ||(collision.collider.gameObject.layer == 10 && playerColor == GameColors.Red))
-        {
-            //Game over, respawn on spawn point
-            //Debug.Log("Morreu!");
+            MovePlayerToRespawnPoint();
         }
     }
 
     void MovePlayerToRespawnPoint()
     {
-
+        
+        
     }
 
 }
