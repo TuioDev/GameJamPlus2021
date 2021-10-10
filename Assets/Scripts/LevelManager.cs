@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private EventManager eventManager;
+    [SerializeField] private GameObject gameGrid;
+    private GameObject currentPart;
+    //private GameObject previousPart;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        //previousPart = null;
+        //currentPart = GetComponentInChildren<GameObject>();
+        //eventManager.ControllingActiveObjects += TilemapController;
     }
 }

@@ -11,10 +11,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] EventManager eventManager;
     [SerializeField] private Sprite[] playerSprites;
     [SerializeField] private SpriteRenderer currentSprite;
+    [SerializeField] private float redJumpMultiplier = 1.5f;
+    [SerializeField] private float yellowVelMultiplier = 1.5f;
+
     private GameColors playerColor;
 
-    //private Vector2 currentVelocity = Vector2.zero;
-    //private float smoothTime = .05f;
     private bool grounded = false;
     private bool jump = false;
 
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
         playerRB = GetComponent<Rigidbody2D>();
         playerColor = GameColors.Blank;
         eventManager.PlayerColorChange += ChangeColor;
+        playerRB.velocity = new Vector2(playerVelocity, playerRB.velocity.y);
+        
     }
 
     // Update is called once per frame
@@ -36,9 +39,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Vector2 targetVelocity = new Vector2(playerVelocity, playerRB.velocity.y);
-        //playerRB.velocity = Vector2.SmoothDamp(playerRB.velocity, targetVelocity, ref currentVelocity, smoothTime);
-        playerRB.velocity = new Vector2(playerVelocity, playerRB.velocity.y);
         if (jump)
         {
             playerRB.AddForce(Vector2.up * playerJumpForce);
@@ -62,23 +62,46 @@ public class PlayerMovement : MonoBehaviour
         {
             case GameColors.Blank:
                 playerVelocity = 5.0f;
+                playerRB.velocity = new Vector2(playerVelocity, playerRB.velocity.y);
                 playerJumpForce = 800.0f;
                 currentSprite.sprite = playerSprites[0];
                 break;
             case GameColors.Yellow:
-                playerVelocity = 7.0f;
+                playerVelocity *= yellowVelMultiplier;
+                playerRB.velocity = new Vector2(playerVelocity, playerRB.velocity.y);
                 playerJumpForce = 800.0f;
                 currentSprite.sprite = playerSprites[1];
                 break;
             case GameColors.Red:
                 playerVelocity = 5.0f;
-                playerJumpForce = 1200.0f;
+                playerRB.velocity = new Vector2(playerVelocity, playerRB.velocity.y);
+                playerJumpForce *= redJumpMultiplier;
                 currentSprite.sprite = playerSprites[2];
                 break;
             default:
                 playerColor = GameColors.Blank;
                 break;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(playerRB.velocity.x < 4.9f)
+        {
+            //Game over, respawn on spawn point
+            Debug.Log("Morreu!");
+        }
+        else if((collision.collider.gameObject.layer == 9 && playerColor == GameColors.Yellow) 
+            ||(collision.collider.gameObject.layer == 10 && playerColor == GameColors.Red))
+        {
+            //Game over, respawn on spawn point
+            //Debug.Log("Morreu!");
+        }
+    }
+
+    void MovePlayerToRespawnPoint()
+    {
+
     }
 
 }
