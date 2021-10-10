@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] EventManager eventManager;
     [SerializeField] private Sprite[] playerSprites;
     [SerializeField] private SpriteRenderer currentSprite;
-    [SerializeField] private float redJumpMultiplier = 1.5f;
+    [SerializeField] private float redJumpMultiplier = 1.2f;
     [SerializeField] private float yellowVelMultiplier = 1.5f;
     [SerializeField] private GameObject gameGrid;
 
