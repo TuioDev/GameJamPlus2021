@@ -6,11 +6,12 @@ using UnityEngine.Tilemaps;
 public class TilemapColorBehaviour : MonoBehaviour
 {
     [SerializeField] private GameColors tilemapColor;
-    [SerializeField] private EventManager eventManager;
+    //[SerializeField] private EventManager eventManager;
 
     private void Start()
     {
-        eventManager.ControllingActiveObjects += TilemapController;
+        //eventManager = EventManager.singleton; // = GameObject.FindObjectOfType<EventManager>(); //("EventManager").GetComponent<EventManager>();
+        EventManager.singleton.ControllingActiveObjects += TilemapController;
     }
 
 
@@ -28,6 +29,14 @@ public class TilemapColorBehaviour : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        PlayerMovement player = collision.collider.GetComponent<PlayerMovement>();
         
+        if(player != null)
+        {
+            if(player.playerColor != GameColors.Blank && player.playerColor != tilemapColor)
+            {
+                player.MovePlayerToRespawnPoint();
+            }
+        }
     }
 }

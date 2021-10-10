@@ -8,26 +8,27 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerVelocity = 5.0f;
     [SerializeField] private float playerJumpForce = 0.0f;
     [SerializeField] private Transform groundCheckLeft;
-    [SerializeField] EventManager eventManager;
     [SerializeField] private Sprite[] playerSprites;
     [SerializeField] private SpriteRenderer currentSprite;
-    [SerializeField] private float redJumpMultiplier = 1.2f;
+    [SerializeField] private float redJumpMultiplier = 1.4f;
     [SerializeField] private float yellowVelMultiplier = 1.5f;
     [SerializeField] private GameObject gameGrid;
 
-    private GameColors playerColor;
+    public GameColors playerColor;
     private GameObject respawnPoint;
     private bool grounded = false;
     private bool jump = false;
+    private int savedCapivaras = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         playerRB = GetComponent<Rigidbody2D>();
         playerColor = GameColors.Blank;
-        eventManager.PlayerColorChange += ChangeColor;
+        EventManager.singleton.PlayerColorChange += ChangeColor;
+        EventManager.singleton.PickUpCapivara += AddScoreNumber;
         playerRB.velocity = new Vector2(playerVelocity, playerRB.velocity.y);
-        
+
     }
 
     // Update is called once per frame
@@ -35,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     {
         grounded = Physics2D.Linecast(transform.position, groundCheckLeft.position, 1 << LayerMask.NameToLayer("Level"));
         CanJump();
-        CanUnlive();
+        CheckVelocity();
     }
 
     private void FixedUpdate()
@@ -85,18 +86,34 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void CanUnlive()
+    void CheckVelocity()
     {
-        if(playerRB.velocity.x < 4.95f)
+        if (playerRB.velocity.x < 4.95f)
         {
             MovePlayerToRespawnPoint();
         }
     }
 
-    void MovePlayerToRespawnPoint()
+    public void MovePlayerToRespawnPoint()
     {
-        
-        
+        Vector2 respawnPoint = GameObject.Find("Respawn_Point").transform.position;
+        this.gameObject.transform.position = respawnPoint;
+        playerRB.velocity = new Vector2(0.0f, 0.0f);
+        ChangeColor(GameColors.Blank);
+        EventManager.singleton.ChangeActiveTilemap(playerColor);
+
+    }
+    void AddScoreNumber(int score)
+    {
+        savedCapivaras += score;
     }
 
+    void CheckIfWon()
+    {
+        if(savedCapivaras >= 3)
+        {
+            //You win
+            Debug.Log("You win!");
+        }
+    }
 }
