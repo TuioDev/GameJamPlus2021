@@ -10,6 +10,7 @@ public class EventManager : MonoBehaviour
     public event Action<GameColors> PlayerColorChange;
     public event Action<GameColors> ControllingActiveObjects;
     public event Action<int> PickUpCapivara;
+
     private void Awake()
     {
         singleton = this;

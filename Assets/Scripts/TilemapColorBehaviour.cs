@@ -6,12 +6,13 @@ using UnityEngine.Tilemaps;
 public class TilemapColorBehaviour : MonoBehaviour
 {
     [SerializeField] private GameColors tilemapColor;
-    //[SerializeField] private EventManager eventManager;
+    private SoundManager soundManager;
+    private bool coroutineController = false;
 
     private void Start()
     {
-        //eventManager = EventManager.singleton; // = GameObject.FindObjectOfType<EventManager>(); //("EventManager").GetComponent<EventManager>();
         EventManager.singleton.ControllingActiveObjects += TilemapController;
+        soundManager = SoundManager.instance;
     }
 
 
@@ -33,10 +34,21 @@ public class TilemapColorBehaviour : MonoBehaviour
         
         if(player != null)
         {
-            if(player.playerColor != GameColors.Blank && player.playerColor != tilemapColor)
+            if(player.playerColor != GameColors.Blank && player.playerColor != tilemapColor && coroutineController == false)
             {
-                player.MovePlayerToRespawnPoint();
+                soundManager.sourceForTheClips.PlayOneShot(soundManager.Lose);
+                player.SetVelocityToZero();
+                coroutineController = true;
+                player.playerAnimator.SetTrigger("Death");
+                StartCoroutine(Pausa(player));
             }
         }
+    }
+    IEnumerator Pausa(PlayerMovement player)
+    {
+        yield return new WaitForSeconds(1.5f);
+        player.playerAnimator.ResetTrigger("Death");
+        player.MovePlayerToRespawnPoint();
+        coroutineController = false;
     }
 }
