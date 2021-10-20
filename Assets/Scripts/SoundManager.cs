@@ -24,6 +24,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip Lose;
     public AudioClip Win;
     public AudioClip PickCapivara;
+    public AudioClip AlpacaJump;
+    public AudioClip AlpacaSpit;
 
     public AudioSource sourceForTheClips;
 

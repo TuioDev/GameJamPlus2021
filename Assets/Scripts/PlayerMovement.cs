@@ -25,9 +25,9 @@ public class PlayerMovement : MonoBehaviour
     private SoundManager soundManager;
     public Animator playerAnimator;
     private bool coroutineController = false;
-    
-    
-    
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +67,18 @@ public class PlayerMovement : MonoBehaviour
         if ((grounded || groundedY || groundedR) && Input.GetKeyDown(KeyCode.Space))
         {
             jump = true;
+            int number = Random.Range(0, 10);
+            switch (number)
+            {
+                case 7:
+                    soundManager.sourceForTheClips.PlayOneShot(soundManager.AlpacaJump);
+                    break;
+                case 9:
+                    soundManager.sourceForTheClips.PlayOneShot(soundManager.AlpacaSpit);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -114,12 +126,12 @@ public class PlayerMovement : MonoBehaviour
             SetVelocityToZero();
             coroutineController = true;
             playerAnimator.SetTrigger("Death");
-            StartCoroutine(Pausa());
-            
+            StartCoroutine(Pause());
+
         }
     }
 
-    IEnumerator Pausa()
+    IEnumerator Pause()
     {
         yield return new WaitForSeconds(1.5f);
         playerAnimator.ResetTrigger("Death");
@@ -142,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckIfWon()
     {
-        if(savedCapivaras >= winCondition)
+        if (savedCapivaras >= winCondition)
         {
             SceneManager.LoadScene(4);
         }
